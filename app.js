@@ -135,4 +135,24 @@ async function toggleItem(id,v,rid){const {error}=await db.from("menu_items").up
 async function logout(){if(orderChannel){db.removeChannel(orderChannel);orderChannel=null}await db.auth.signOut();ownerRestaurant=null;ownerOrders=[];document.querySelector("#ownerApp").hidden=true;document.querySelector("#customerApp").hidden=false;sheet.close();inside.innerHTML="<h2>Logged out</h2>";refreshDashboardTab()}
 function payments(){inside.innerHTML="<h2>Payments</h2><p class=\"muted\">Online payments are not connected yet.</p><div class=\"hub-panel\"><b>Pay for Hoopa Eats orders</b><p>When secure online payments are connected, this is where customers will manage payment options and view payment status.</p></div><p class=\"muted\">For your security, do not enter card information anywhere on Hoopa Eats yet.</p><button class=\"full\" onclick=\"sheet.close()\">Close</button>";sheet.showModal()}
 function home(){customerHome()}
+function bindFoodSearch(){
+  const form=document.getElementById("foodSearchForm");
+  const input=document.getElementById("search");
+  if(!form||!input)return;
+  form.addEventListener("submit",function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    renderSearchResults(input.value);
+  });
+  input.addEventListener("keydown",function(e){
+    if(e.key==="Enter"){
+      e.preventDefault();
+      renderSearchResults(input.value);
+    }
+  });
+  input.addEventListener("input",function(){
+    if(!input.value.trim())draw();
+  });
+}
+bindFoodSearch();
 loadRestaurants();
