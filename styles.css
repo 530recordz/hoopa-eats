@@ -130,3 +130,44 @@
   .owner-main-tabs{grid-template-columns:1fr 1.55fr;gap:8px}
   .owner-main-tabs button{min-height:44px;padding:9px 8px;font-size:13px}
 }
+
+
+/* Owner hub nav uses its own class so old top-nav rules cannot overlap it */
+.owner-hub-nav{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  align-items:center!important;
+  gap:10px!important;
+  width:100%!important;
+  max-width:760px!important;
+  margin:0 auto 14px!important;
+  padding:0!important;
+  overflow:visible!important;
+}
+.owner-hub-nav button{
+  position:static!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%!important;
+  min-width:0!important;
+  min-height:46px!important;
+  height:auto!important;
+  margin:0!important;
+  padding:11px 14px!important;
+  border:0!important;
+  border-radius:14px!important;
+  font-size:15px!important;
+  font-weight:800!important;
+  line-height:1.15!important;
+  text-align:center!important;
+  white-space:normal!important;
+  transform:none!important;
+}
+.owner-hub-nav button:first-child{background:#eeeae2!important;color:#26382e!important}
+.owner-hub-nav button.active{background:#26382e!important;color:#fff!important}
+.owner-hub-nav:before,.owner-hub-nav:after{display:none!important;content:none!important}
+@media(max-width:520px){
+  .owner-hub-nav{grid-template-columns:minmax(90px,.8fr) minmax(150px,1.4fr)!important;gap:8px!important}
+  .owner-hub-nav button{font-size:13px!important;padding:10px 8px!important}
+}
