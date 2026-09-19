@@ -38,10 +38,42 @@ const SEARCH_ALIASES={taco:["tacos","mexican"],tacos:["taco","mexican"],mexican:
 function normalizeSearch(v){return String(v||"").toLowerCase().normalize("NFD").replace(/[\\u0300-\\u036f]/g,"").replace(/[^a-z0-9]+/g," ").trim()}
 function searchTerms(q){const base=normalizeSearch(q).split(/\\s+/).filter(Boolean);return base.map(w=>[w,...(SEARCH_ALIASES[w]||[])]).filter(x=>x.length)}
 function scoreRestaurant(r,groups){const name=normalizeSearch(r.name),desc=normalizeSearch(r.description),text=normalizeSearch(r._searchText||[r.name,r.description].join(" "));let score=0;for(const choices of groups){let best=0;for(const term of choices){if(name===term)best=Math.max(best,100);else if(name.includes(term))best=Math.max(best,45);if(desc.includes(term))best=Math.max(best,20);if(text.includes(term))best=Math.max(best,10)}if(!best)return 0;score+=best}return score}
-function submitFoodSearch(event){if(event)event.preventDefault();const input=document.getElementById("search");const query=input?input.value:"";renderSearchResults(query);return false}
-function filterFood(){const input=document.getElementById("search");if(!input)return;if(!input.value.trim())draw()}
-function renderSearchResults(query){const raw=String(query||"").trim(),q=normalizeSearch(raw);if(!q){draw();return}const groups=searchTerms(q);const ranked=restaurants.map(r=>({r,score:scoreRestaurant(r,groups)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.r.name.localeCompare(b.r.name));feed.innerHTML=ranked.length?'<div class="search-results-head"><b>'+ranked.length+' result'+(ranked.length===1?'':'s')+' for “'+esc(raw)+'”</b><button type="button" onclick="clearFoodSearch()">Clear</button></div>'+ranked.map(x=>{const r=x.r;return '<article class="card restaurant" data-id="'+esc(r.id)+'" onclick="restaurant(\\''+r.id+'\\')"><div class="food">🍽️</div><div class="pad row"><div><b>'+esc(r.name)+'</b><div class="muted">'+esc(r.description||"Local food place")+'</div></div><span>'+(!r.is_open&&!r.is_directory?"Closed":r.is_directory?"View":"Open")+'</span></div></article>'}).join(""):'<article class="card"><div class="pad"><b>No food matches for “'+esc(raw)+'”</b><p class="muted">Try tacos, Mexican, pizza, BBQ, burgers, coffee, breakfast, deli, or desserts.</p></div></article>';if(input)input.value=raw}
-function clearFoodSearch(){const input=document.getElementById("search");if(input)input.value="";draw();input?.focus()}
+function submitFoodSearch(event){
+  if(event) event.preventDefault();
+  const input=document.getElementById("search");
+  renderSearchResults(input ? input.value : "");
+  return false;
+}
+function filterFood(){
+  const input=document.getElementById("search");
+  if(input && !input.value.trim()) draw();
+}
+function renderSearchResults(query){
+  const raw=String(query||"").trim();
+  const q=normalizeSearch(raw);
+  if(!q){draw();return;}
+  const groups=searchTerms(q);
+  const ranked=restaurants.map(r=>({r,score:scoreRestaurant(r,groups)})).filter(x=>x.score>0).sort((a,b)=>b.score-a.score||a.r.name.localeCompare(b.r.name));
+  if(!ranked.length){
+    feed.innerHTML='<article class="card"><div class="pad"><b>No food matches for '+esc(raw)+'</b><p class="muted">Try tacos, Mexican, pizza, BBQ, burgers, coffee, breakfast, deli, or desserts.</p></div></article>';
+    return;
+  }
+  feed.innerHTML='<div class="search-results-head"><b>'+ranked.length+' results for '+esc(raw)+'</b><button type="button" onclick="clearFoodSearch()">Clear</button></div>';
+  ranked.forEach(({r})=>{
+    const card=document.createElement("article");
+    card.className="card restaurant";
+    card.dataset.id=String(r.id);
+    card.innerHTML='<div class="food">🍽️</div><div class="pad row"><div><b>'+esc(r.name)+'</b><div class="muted">'+esc(r.description||"Local food place")+'</div></div><span>'+(r.is_directory?"View":(!r.is_open?"Closed":"Open"))+'</span></div>';
+    card.addEventListener("click",()=>restaurant(r.id));
+    feed.appendChild(card);
+  });
+}
+function clearFoodSearch(){
+  const input=document.getElementById("search");
+  if(input) input.value="";
+  draw();
+  if(input) input.focus();
+}
 async function restaurant(id){const r=restaurants.find(x=>x.id===id);if(!r)return;if(r.is_directory){inside.innerHTML='<div class="directory-detail"><span class="directory-label">Hoopa food directory</span><h2>'+esc(r.name)+'</h2><p>'+esc(r.description||"Local food place")+'</p>'+(r.address?'<div class="hub-panel"><b>Address</b><p>'+esc(r.address)+'</p>'+(r.phone?'<b>Phone</b><p>'+esc(r.phone)+'</p>':'')+'</div>':'')+'<p class="muted">This place appears in Hoopa Eats search so customers can discover local food. Online ordering through Hoopa Eats is not connected for this listing yet.</p><button class="full" onclick="sheet.close()">Close</button></div>';sheet.showModal();return}inside.innerHTML='<h2>'+esc(r.name)+'</h2><p>Loading menu…</p>';sheet.showModal();const {data,error}=await db.from("menu_items").select("*").eq("restaurant_id",id).order("created_at");if(error)return inside.innerHTML='<h2>'+esc(r.name)+'</h2><p>Menu could not load.</p>';const items=data||[];inside.innerHTML='<h2>'+esc(r.name)+'</h2><p class="muted">'+esc(r.description||"")+'</p>'+(items.length?items.map(x=>'<div class="menu row"><div><b>'+esc(x.name)+'</b><br><span class="muted">'+esc(x.description||"")+'</span><br>'+money(x.price)+'</div><button '+(!x.is_available?'disabled':'')+' onclick="add(\\''+id+'\\',\\''+x.id+'\\',\\''+encodeURIComponent(x.name)+'\\','+Number(x.price)+')">'+(x.is_available?"Add":"Sold out")+'</button></div>').join("")+'<button class="primary full" onclick="checkout(\\''+id+'\\')">Place Order</button>':'<p>Menu coming soon.</p>')}
 function add(rid,iid,name,price){if(!cart[iid])cart[iid]={restaurant_id:rid,menu_item_id:iid,name:decodeURIComponent(name),price:+price,quantity:0};cart[iid].quantity++;alert("Added to cart")}
 function checkout(id){const r=restaurants.find(x=>x.id===id);if(!r.is_open||!r.accepting_orders)return alert("This restaurant is closed or has paused new orders.");const lines=Object.values(cart).filter(x=>x.restaurant_id===id);if(!lines.length)return alert("Add something first.");const total=lines.reduce((s,x)=>s+x.price*x.quantity,0),canPickup=r.offers_pickup!==false,canDelivery=r.offers_delivery===true;if(!canPickup&&!canDelivery)return alert("This restaurant is not accepting pickup or delivery right now.");inside.innerHTML='<h2>Checkout</h2>'+lines.map(x=>'<p>'+x.quantity+' × '+esc(x.name)+' — '+money(x.price*x.quantity)+'</p>').join("")+'<h3>Food subtotal: '+money(total)+'</h3><h3>How do you want your order?</h3>'+(canPickup?'<label><input type="radio" name="fulfillment" value="pickup" checked onchange="fulfillmentChanged()"> Pickup</label> ':'')+(canDelivery?'<label><input type="radio" name="fulfillment" value="delivery" '+(!canPickup?'checked':'')+' onchange="fulfillmentChanged()"> Delivery</label><p class="muted">Delivery fee: '+money(r.delivery_fee)+(Number(r.delivery_minimum)>0?' · Minimum '+money(r.delivery_minimum):'')+'</p>':'')+'<input id="pickup" placeholder="Name for order"><input id="phone" placeholder="Phone number (optional)"><div id="deliveryFields" style="display:none"><input id="deliveryAddress" placeholder="Delivery address"><textarea id="deliveryInstructions" placeholder="Delivery instructions (optional)"></textarea></div><p class="muted">Online payment is not connected yet. Do not enter card information.</p><button class="primary full" onclick="submitOrder(\''+id+'\')">Submit order</button>';fulfillmentChanged()}
