@@ -3,11 +3,23 @@ const SUPABASE_KEY="sb_publishable_SUGwEIXnaabCXYC0eU8MCQ_43AzhU_z";
 const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let restaurants=[],cart={};
 const HOOPA_DIRECTORY=[
- {id:"directory-valley-cafe",name:"The Valley Cafe",description:"American comfort food, burgers, sandwiches, wraps, fries, milkshakes, lunch and dinner",phone:"(530) 922-0825",address:"12700 CA-96, Hoopa, CA 95546",is_directory:true},
- {id:"directory-burger-barn",name:"Burger Barn",description:"Burgers, sandwiches, American food, lunch, quick bites",phone:"(530) 625-9100",address:"Highway 96, Hoopa, CA 95546",is_directory:true},
- {id:"directory-hoopa-shopping",name:"Hoopa Shopping Center | iłwai kiliwh",description:"Deli, sandwiches, prepared food, espresso, coffee, groceries, quick meals",phone:"(530) 625-1013",address:"12500 State Hwy 96, Hoopa, CA 95546",is_directory:true},
- {id:"directory-hoopa-mini-mart",name:"Hoopa Mini Mart",description:"Convenience food, snacks, drinks, groceries, quick bites",phone:"(530) 625-4341",address:"12591 State Hwy 96, Hoopa, CA 95546",is_directory:true}
-];
+ {id:"directory-valley-cafe",name:"The Valley Cafe",description:"American restaurant, burgers, chicken sandwiches, club sandwiches, wraps, fries, milkshakes, lunch, dinner, comfort food",phone:"(530) 922-0825",address:"12676 Highway 96, Hoopa, CA 95546",is_directory:true},
+ {id:"directory-gals-firepit",name:"Gal's Firepit Pizza",description:"Pizza food truck, wood-fired pizza, Hawaiian pizza, meat pizza, pesto pizza, vegetarian pizza, dinner, takeaway",phone:"(530) 716-0682",address:"11716 CA-96, Hoopa, CA 95546",is_directory:true},
+ {id:"directory-cup-of-joe",name:"Cup Of Joe",description:"Coffee, cafe, espresso, hot drinks, cold drinks, breakfast, lunch, quick bites",phone:"(530) 625-5004",address:"12651 CA-96, Hoopa, CA 95546",is_directory:true},
+ {id:"directory-burger-barn",name:"Burger Barn",description:"Burgers, cheeseburgers, sandwiches, American food, lunch, quick bites",phone:"(530) 625-9100",address:"Highway 96, Hoopa, CA 95546",is_directory:true},
+ {id:"directory-hoopa-shopping",name:"Hoopa Shopping Center | iłwai kiliwh",description:"Full deli, hot food, sandwiches, fried chicken, chicken strips, pizza sticks, JoJos, espresso bar, coffee, groceries, prepared food",phone:"(530) 625-1013",address:"12500 State Hwy 96, Hoopa, CA 95546",is_directory:true},
+ {id:"directory-hoopa-mini-mart",name:"Hoopa Mini-Mart Gas Station",description:"Convenience food, snacks, drinks, fruit, vegetables, meat, groceries, quick bites",phone:"(530) 625-4341",address:"12591 CA-96, Hoopa, CA 95546",is_directory:true},
+ {id:"directory-mf-craving",name:"MF Craving",description:"Food trailer, local food, meals, snacks, quick bites",phone:"(707) 599-9365",address:"Hoopa, CA 95546",is_directory:true},
+ {id:"directory-gatos-tacos",name:"Gato's Tacos",description:"Tacos, Mexican food, food trailer, Mexican, lunch, dinner, quick bites",phone:"(707) 474-1091",address:"Hoopa, CA 95546",is_directory:true},
+ {id:"directory-joseph-girls",name:"Joseph Girls / Cali Kitchen",description:"Food sales, local food, meals, snacks, kitchen",phone:"(707) 613-9361",address:"Hoopa, CA 95546",is_directory:true},
+ {id:"directory-tribal-treats",name:"Tribal Treats and Catering",description:"Catering, treats, local food, desserts, meals, food business",phone:"(530) 784-3048",address:"Hoopa, CA 95546",is_directory:true},
+ {id:"directory-marias-tacos",name:"Maria's Tacos",description:"Tacos, Mexican food, Mexican, local food, lunch, dinner, quick bites",phone:"(530) 610-5397",address:"Hoopa, CA 95546",is_directory:true},
+ {id:"directory-snacky-lews",name:"Snacky Lews",description:"Snacks, local food, treats, quick bites, food business",phone:"(707) 497-8489",address:"Hoopa, CA 95546",is_directory:true},
+ {id:"directory-kinsinta-korner",name:"Kinsinta Korner",description:"Local food, snacks, meals, quick bites, food business",phone:"(707) 672-2165",address:"Hoopa, CA 95546",is_directory:true},
+ {id:"directory-udbies",name:"Udbie's Food & Sweets",description:"Sweets, desserts, snacks, local food, treats, food business",phone:"(530) 610-8541",address:"Hoopa, CA 95546",is_directory:true},
+ {id:"directory-micks",name:"Mick's Chick's & More",description:"Baked goods, eggs, candy, sweets, desserts, local food",phone:"(707) 499-8410",address:"Hoopa, CA 95546",is_directory:true},
+ {id:"directory-smokerz",name:"Smoker'z BBQ and Catering",description:"BBQ, barbecue, smoked meat, catering, local food, lunch, dinner",phone:"(707) 601-8502",address:"Hoopa, CA 95546",is_directory:true}
+]
 const feed=document.querySelector("#feed"),sheet=document.querySelector("#sheet"),inside=document.querySelector("#inside");
 const money=n=>"$"+Number(n||0).toFixed(2);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
