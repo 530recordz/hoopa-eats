@@ -6,6 +6,9 @@ const feed=document.querySelector("#feed"),sheet=document.querySelector("#sheet"
 const money=n=>"$"+Number(n||0).toFixed(2);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 async function refreshDashboardTab(){}
+async function myRestaurant(){const {data:{user}}=await db.auth.getUser();if(!user)return profile();await ownerDashboard();ownerNavigate("dashboard")}
+async function siteSettings(){const {data:{user}}=await db.auth.getUser();if(!user)return profile();await ownerDashboard();accountSettings()}
+async function openDashboardSection(tab){const {data:{user}}=await db.auth.getUser();if(!user)return profile();await ownerDashboard();ownerNavigate(tab)}
 async function openDashboardTab(){const {data:{user}}=await db.auth.getUser();if(user)return ownerDashboard();profile()}
 async function customerHome(){document.querySelector("#ownerApp").hidden=true;document.querySelector("#customerApp").hidden=false;await refreshDashboardTab();await refreshDashboardTab();loadRestaurants();scrollTo({top:0,behavior:"smooth"})}
 async function loadRestaurants(){const {data,error}=await db.from("restaurants").select("*").order("created_at");if(error){console.error(error);feed.innerHTML='<p>Could not load restaurants.</p>';return}restaurants=data||[];draw()}
@@ -60,5 +63,5 @@ async function addMenuItem(rid){const p=Number(iprice.value);if(!iname.value.tri
 async function toggleItem(id,v,rid){const {error}=await db.from("menu_items").update({is_available:v}).eq("id",id);if(error)return alert(error.message);manageMenu(rid)}
 async function logout(){if(orderChannel){db.removeChannel(orderChannel);orderChannel=null}await db.auth.signOut();ownerRestaurant=null;ownerOrders=[];document.querySelector("#ownerApp").hidden=true;document.querySelector("#customerApp").hidden=false;sheet.close();inside.innerHTML="<h2>Logged out</h2>";refreshDashboardTab()}
 function chat(){inside.innerHTML="<h2>Messages</h2><p>Direct restaurant messaging is coming next.</p>";sheet.showModal()}
-function home(){sheet.close();scrollTo({top:0,behavior:"smooth"})}
+function home(){customerHome()}
 loadRestaurants();
