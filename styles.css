@@ -171,3 +171,24 @@
   .owner-hub-nav{grid-template-columns:minmax(90px,.8fr) minmax(150px,1.4fr)!important;gap:8px!important}
   .owner-hub-nav button{font-size:13px!important;padding:10px 8px!important}
 }
+
+
+/* Restaurant payments */
+.payment-tabs{display:flex;gap:8px;overflow-x:auto;padding:2px 0 16px}
+.payment-tabs button{background:#e6e2d9;color:#26382e;white-space:nowrap;font-size:13px;font-weight:800}
+.payment-tabs button.active{background:#26382e;color:#fff}
+.payment-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.payment-stats>div,.payout-preview{background:#fff;border-radius:18px;padding:16px}
+.payment-stats span,.payment-stats b,.payment-stats small,.payout-preview span,.payout-preview b,.payout-preview small{display:block}
+.payment-stats span,.payout-preview span{font-size:13px;color:#6e756f;font-weight:750}
+.payment-stats b,.payout-preview b{font-size:24px;margin:4px 0}
+.payment-stats small,.payout-preview small{color:#6e756f}
+.payment-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #eee}
+.payment-row:last-child{border-bottom:0}
+.payment-row span{display:block;color:#6e756f;font-size:13px;margin-top:3px}
+.payment-amount{text-align:right}
+.pay-status{display:inline-block!important;padding:4px 8px;border-radius:999px;background:#eeeae2;text-transform:capitalize;font-weight:750}
+.pay-status.paid{background:#e3f2e8;color:#24633f}
+.pay-status.pending{background:#fff3cd;color:#755d12}
+.pay-status.refunded{background:#e8edf3;color:#43576c}
+@media(max-width:520px){.payment-stats{grid-template-columns:1fr}.payment-tabs button{font-size:12px;padding:10px 11px}}
