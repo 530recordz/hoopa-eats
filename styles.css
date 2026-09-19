@@ -225,3 +225,80 @@
 .profile-section input,.profile-section textarea{background:#fff}
 .field-help{margin:7px 0 0;color:#6e756f;font-size:13px;line-height:1.4}
 @media(max-width:480px){.restaurant-profile-head{align-items:flex-start}.restaurant-profile-head .profile-logo{flex-basis:62px;width:62px;height:62px}}
+
+
+/* 2026-09-18 clean navigation redesign */
+body{background:#f8f5ee;color:#20342a}
+.site-header{background:#fff;border-bottom:1px solid #e5e0d6;box-shadow:none}
+.site-header .top-nav button{font-weight:650;color:#33443b}
+.site-header .top-nav button:hover{background:#f6f3ed}
+.site-header .top-nav .wordmark{color:#173c2d;font-weight:700}
+.home-main{max-width:680px;padding-top:64px}
+.home-search{margin-bottom:22px}
+.home-main h1{font-size:32px;letter-spacing:-.025em}
+.food-search-form{display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #e4dfd5;border-radius:14px;padding:5px;box-shadow:0 3px 14px #00000008}
+.home-main #search{border-radius:10px;background:transparent;height:46px}
+.search-submit{border-radius:10px;background:#244b39;color:#fff;font-weight:750;padding:12px 18px}
+.home-main nav.meal-filters{justify-content:flex-start}
+.home-main nav.meal-filters span{background:transparent;border:1px solid #ddd7ca;border-radius:999px;padding:8px 14px}
+.card{border:1px solid #e8e2d8;border-radius:16px;box-shadow:0 3px 12px #00000008}
+.food{height:190px;background:#eee5d4}
+.customer-bottom,.owner-bottom{
+  position:fixed;
+  z-index:12;
+  left:0;
+  right:0;
+  bottom:0;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:0;
+  background:#fff;
+  border-top:1px solid #ded9cf;
+  padding:0 max(8px,calc((100vw - 760px)/2)) env(safe-area-inset-bottom);
+  box-shadow:none;
+}
+.customer-bottom button,.owner-bottom button{
+  min-width:0;
+  height:58px;
+  margin:0;
+  padding:0 8px;
+  border:0;
+  border-radius:0!important;
+  background:transparent!important;
+  color:#35483e;
+  font-size:13px;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  white-space:nowrap;
+}
+.customer-bottom button+button,.owner-bottom button+button{border-left:1px solid #eee9e0}
+.customer-bottom span,.owner-bottom .nav-icon{
+  display:inline!important;
+  margin:0!important;
+  padding:0!important;
+  border:0!important;
+  border-radius:0!important;
+  background:transparent!important;
+  font-size:17px!important;
+  line-height:1!important;
+}
+.customer-bottom b{font:inherit}
+.customer-bottom button:hover,.owner-bottom button:hover,.owner-bottom button.active{
+  background:#f7f4ee!important;
+  color:#173c2d;
+}
+.owner-top{background:#fff;border-bottom:1px solid #e5e0d6}
+.owner-hub-nav button{border-radius:0!important;background:transparent!important;border-bottom:2px solid transparent!important}
+.owner-hub-nav button:first-child{background:transparent!important}
+.owner-hub-nav button.active{background:transparent!important;color:#173c2d!important;border-bottom-color:#173c2d!important}
+.dash-card,.hub-panel,.order-card,.settings-section{border:1px solid #e8e2d8;border-radius:14px;box-shadow:none}
+@media(max-width:520px){
+ .home-main{padding-top:38px}
+ .home-main h1{font-size:27px}
+ .customer-bottom button,.owner-bottom button{height:56px;padding:0 3px;font-size:11px;gap:3px}
+ .customer-bottom span,.owner-bottom .nav-icon{font-size:15px!important}
+ .search-submit{padding:11px 13px}
+}
